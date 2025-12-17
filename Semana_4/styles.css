@@ -1,0 +1,65 @@
+/* ===== COLORES BASE DEL LOGO ===== */
+:root {
+  --azul-seguridad: #1f2a44;
+  --amarillo-seguridad: #f5b400;
+  --gris-claro: #f4f6f8;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: var(--gris-claro);
+}
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(
+    rgba(31, 42, 68, 0.85),
+    rgba(31, 42, 68, 0.85)
+  ),
+  url("assets/img/seguridad.jpg") center/cover no-repeat;
+  padding: 90px 0;
+}
+
+/* ===== SECCIONES ===== */
+.section-light {
+  background-color: #ffffff;
+  padding: 100px 0;
+}
+
+.section-dark {
+  background-color: var(--azul-seguridad);
+  padding: 70px 0;
+}
+
+/* ===== TARJETAS ===== */
+.service-card {
+  border-left: 6px solid var(--amarillo-seguridad);
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+}
+
+.btn-primary {
+  background-color: var(--amarillo-seguridad);
+  border: none;
+  color: #000;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #e0a800;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: #121826;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 15px;
+  }
+}
