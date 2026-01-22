@@ -1,4 +1,3 @@
-// Lista de productos
 let productos = [
     {
         nombre: "Laptop",
@@ -17,46 +16,39 @@ let productos = [
     }
 ];
 
-// Referencia al UL
 const lista = document.getElementById("lista-productos");
 
-// Función para mostrar productos
 function renderizarProductos() {
     lista.innerHTML = "";
 
     productos.forEach(producto => {
         const li = document.createElement("li");
-
         li.innerHTML = `
             <strong>${producto.nombre}</strong><br>
             Precio: $${producto.precio}<br>
             ${producto.descripcion}
         `;
-
         lista.appendChild(li);
     });
 }
 
-// Cargar productos al iniciar
-document.addEventListener("DOMContentLoaded", renderizarProductos);
+renderizarProductos();
 
-// Agregar nuevo producto
 document.getElementById("btnAgregar").addEventListener("click", () => {
 
-    let nombre = prompt("Ingrese el nombre del producto:");
-    let precio = prompt("Ingrese el precio:");
-    let descripcion = prompt("Ingrese la descripción:");
+    let nombre = prompt("Nombre del producto:");
+    let precio = prompt("Precio:");
+    let descripcion = prompt("Descripción:");
 
     if (nombre && precio && descripcion) {
-        const nuevoProducto = {
+        productos.push({
             nombre: nombre,
             precio: precio,
             descripcion: descripcion
-        };
+        });
 
-        productos.push(nuevoProducto);
         renderizarProductos();
     } else {
-        alert("Debe completar todos los datos");
+        alert("Complete todos los campos");
     }
 });
