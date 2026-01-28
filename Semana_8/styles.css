@@ -1,0 +1,21 @@
+body {
+    background-color: #eef2f7;
+}
+
+h3, h4 {
+    color: #0d6efd;
+}
+
+table td {
+    vertical-align: middle;
+}
+
+footer {
+    font-size: 14px;
+}
+
+.carrusel-img {
+    height: 350px;
+    object-fit: contain;
+    background-color: #ffffff;
+}
