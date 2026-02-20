@@ -1,64 +1,70 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
+# Ruta principal
 @app.route("/")
-def inicio():
-    return "Bienvenido al sistema web de Pacific Security Force"
+def index():
+    return render_template("index.html")
 
-# Institucional
-@app.route('/nosotros')
-def nosotros():
-    return 'Pacific Security Force es una empresa especializada en seguridad privada en Ecuador.'
+# Acerca de
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
-@app.route('/mision')
-def mision():
-    return 'Nuestra misión es brindar protección y confianza a nuestros clientes.'
-
-@app.route('/vision')
-def vision():
-    return 'Ser la empresa líder en seguridad privada a nivel nacional.'
-
-# Servicios
-@app.route('/servicios')
+# Servicios (lista dinámica)
+@app.route("/servicios")
 def servicios():
-    return 'Servicios: Vigilancia fija, Custodia armada, Seguridad electrónica.'
+    lista_servicios = [
+        "Vigilancia",
+        "Custodia",
+        "Seguridad Electronica"
+    ]
+    return render_template("servicios.html", servicios=lista_servicios)
 
-@app.route('/servicios/<tipo>')
-def tipo_servicio(tipo):
-    return f'Detalles del servicio de {tipo}.'
-
-# Personal
-@app.route('/personal')
-def personal():
-    return 'Listado general del personal de seguridad.'
-
-@app.route('/personal/<int:id>')
-def detalle_personal(id):
-    return f'Detalles del guardia con ID {id}'
+# Ruta dinámica de servicios
+@app.route("/servicio/<tipo>")
+def detalle_servicio(tipo):
+    tipo = tipo.lower()  # Convertimos a minúscula para evitar errores
+    return render_template("detalle_servicio.html", tipo=tipo)
 
 # Clientes
-@app.route('/clientes')
+@app.route("/clientes")
 def clientes():
-    return 'Listado de clientes corporativos.'
+    lista_clientes = [
+        "Edificio Vertice",
+        "Edificio Grand Victoria",
+        "Edificio Baviera",
+        "Edificio Aurus",
+        "Edificio Century Plaza 1",
+        "Edificio Avinthia",
+        "Condominios Montreal",
+        "CPN"
+    ]
+    return render_template("clientes.html", clientes=lista_clientes)
 
-@app.route('/clientes/<empresa>')
-def cliente_empresa(empresa):
-    return f'Información del cliente {empresa}'
-
-# Contacto
-@app.route('/contacto')
-def contacto():
-    return 'Contacto: info@pacificsecurity.com'
-
-@app.route('/contacto/<ciudad>')
-def contacto_ciudad(ciudad):
-    return f'Oficina de Pacific Security Force en {ciudad}'
-
-# Asignaciones
-@app.route('/asignacion/<guardia>/<puesto>')
-def asignacion(guardia, puesto):
-    return f'El guardia {guardia} está asignado al puesto {puesto}.'
+# Personal
+@app.route("/personal")
+def personal():
+    guardias = [
+        {"nombre": "Olmedo Bernardo Maldonado", "cargo": "Gerente General"},
+        {"nombre": "Dayanara Quishpe", "cargo": "Jefa de Talento Humano"},
+        {"nombre": "David Bernardo", "cargo": "Jefe de Operaciones"},
+        {"nombre": "Franklin Parra", "cargo": "Supervisor"},
+        {"nombre": "Rafael Quishpe", "cargo": "Supervisor"},
+        {"nombre": "Diego Tipantuña", "cargo": "Guardia"},
+        {"nombre": "Damian Velez", "cargo": "Guardia"},
+        {"nombre": "David Velez", "cargo": "Guardia"},
+        {"nombre": "Vinicio Caizapanta", "cargo": "Guardia"},
+        {"nombre": "Humberto Cachihuango", "cargo": "Guardia"},
+        {"nombre": "Anderson Delgado", "cargo": "Guardia"},
+        {"nombre": "Carmen Unda", "cargo": "Guardia"},
+        {"nombre": "Stalin Pangay", "cargo": "Guardia"},
+        {"nombre": "Franklin Mendez", "cargo": "Guardia"},
+        {"nombre": "Lenin Cevallos", "cargo": "Guardia"},
+        {"nombre": "Erick Fernandez", "cargo": "Guardia"}
+    ]
+    return render_template("personal.html", guardias=guardias)
 
 if __name__ == "__main__":
     app.run(debug=True)

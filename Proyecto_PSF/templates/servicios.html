@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Nuestros Servicios</h2>
+
+<ul>
+    {% for servicio in servicios %}
+        <li>
+            <a href="/servicio/{{ servicio|lower }}">
+                {{ servicio }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

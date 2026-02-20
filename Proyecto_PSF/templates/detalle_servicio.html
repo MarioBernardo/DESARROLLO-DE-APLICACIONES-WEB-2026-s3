@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Servicio: {{ tipo|capitalize }}</h2>
+
+{% if tipo == "vigilancia" %}
+<p>Servicio de vigilancia privada 24/7.</p>
+
+{% elif tipo == "custodia" %}
+<p>Custodia armada y protección especializada.</p>
+
+{% elif tipo == "seguridad electronica" %}
+<p>Instalación de cámaras y sistemas electrónicos.</p>
+
+{% else %}
+<p>Servicio no disponible.</p>
+{% endif %}
+
+{% endblock %}

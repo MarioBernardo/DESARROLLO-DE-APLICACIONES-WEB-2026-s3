@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Nuestro Personal</h2>
+
+<ul>
+    {% for g in guardias %}
+        <li>{{ g.nombre }} - {{ g.cargo }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
