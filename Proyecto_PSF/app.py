@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ def index():
 def about():
     return render_template("about.html")
 
-# Servicios (lista dinámica)
+# Servicios
 @app.route("/servicios")
 def servicios():
     lista_servicios = [
@@ -25,7 +25,7 @@ def servicios():
 # Ruta dinámica de servicios
 @app.route("/servicio/<tipo>")
 def detalle_servicio(tipo):
-    tipo = tipo.lower()  # Convertimos a minúscula para evitar errores
+    tipo = tipo.lower()
     return render_template("detalle_servicio.html", tipo=tipo)
 
 # Clientes
@@ -65,6 +65,19 @@ def personal():
         {"nombre": "Erick Fernandez", "cargo": "Guardia"}
     ]
     return render_template("personal.html", guardias=guardias)
+
+# Contacto con formulario
+@app.route("/contacto", methods=["GET", "POST"])
+def contacto():
+    mensaje_confirmacion = None
+
+    if request.method == "POST":
+        nombre = request.form["nombre"]
+        correo = request.form["correo"]
+        mensaje_confirmacion = f"Gracias {nombre}, hemos recibido tu mensaje. Te contactaremos pronto."
+
+    return render_template("contacto.html", mensaje=mensaje_confirmacion)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

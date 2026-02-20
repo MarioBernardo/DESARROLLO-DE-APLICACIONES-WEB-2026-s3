@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Contáctanos</h2>
+
+<form method="POST">
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" required><br><br>
+
+    <label>Correo:</label><br>
+    <input type="email" name="correo" required><br><br>
+
+    <label>Mensaje:</label><br>
+    <textarea name="mensaje" rows="4" required></textarea><br><br>
+
+    <button type="submit">Enviar</button>
+</form>
+
+{% if mensaje %}
+    <p style="color: green;"><strong>{{ mensaje }}</strong></p>
+{% endif %}
+
+{% endblock %}
