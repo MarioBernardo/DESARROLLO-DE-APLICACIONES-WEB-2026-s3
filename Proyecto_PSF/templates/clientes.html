@@ -1,12 +1,18 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h2>Clientes</h2>
 
-<ul>
+<h2>Nuestros Clientes</h2>
+
+<div class="row">
     {% for cliente in clientes %}
-        <li>{{ cliente }}</li>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    {{ cliente }}
+                </div>
+            </div>
+        </div>
     {% endfor %}
-</ul>
+</div>
 
 {% endblock %}

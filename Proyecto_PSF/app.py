@@ -1,36 +1,54 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
+from models import *
 
 app = Flask(__name__)
 
-# Ruta principal
+crear_tablas()
+precargar()
+
+inventario = Inventario()
+inventario.cargar()
+
+# ===============================
+# PAGINAS PRINCIPALES
+# ===============================
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Acerca de
 @app.route("/about")
 def about():
     return render_template("about.html")
 
-# Servicios
 @app.route("/servicios")
 def servicios():
-    lista_servicios = [
-        "Vigilancia",
-        "Custodia",
-        "Seguridad Electronica"
+    servicios_lista = [
+        {"id": 1, "nombre": "Seguridad Física"},
+        {"id": 2, "nombre": "Monitoreo CCTV"},
+        {"id": 3, "nombre": "Consultoría en Seguridad"}
     ]
-    return render_template("servicios.html", servicios=lista_servicios)
+    return render_template("servicios.html", servicios=servicios_lista)
 
-# Ruta dinámica de servicios
-@app.route("/servicio/<tipo>")
-def detalle_servicio(tipo):
-    tipo = tipo.lower()
-    return render_template("detalle_servicio.html", tipo=tipo)
+@app.route("/servicio/<int:id>")
+def detalle_servicio(id):
+    descripciones = {
+        1: "Protección empresarial y residencial.",
+        2: "Monitoreo 24/7 con tecnología avanzada.",
+        3: "Análisis y planificación estratégica."
+    }
 
-# Clientes
+    servicio = descripciones.get(id)
+
+    if not servicio:
+        return "Servicio no encontrado", 404
+
+    return render_template("detalle_servicio.html",
+                           descripcion=servicio)
+
 @app.route("/clientes")
 def clientes():
+
     lista_clientes = [
         "Edificio Vertice",
         "Edificio Grand Victoria",
@@ -39,45 +57,76 @@ def clientes():
         "Edificio Century Plaza 1",
         "Edificio Avinthia",
         "Condominios Montreal",
-        "CPN"
+        "CPN",
+        "CR Constructora",
+        "Edificio Austria",
+        "Piazzara"
     ]
+
     return render_template("clientes.html", clientes=lista_clientes)
 
-# Personal
 @app.route("/personal")
 def personal():
-    guardias = [
-        {"nombre": "Olmedo Bernardo Maldonado", "cargo": "Gerente General"},
-        {"nombre": "Dayanara Quishpe", "cargo": "Jefa de Talento Humano"},
-        {"nombre": "David Bernardo", "cargo": "Jefe de Operaciones"},
-        {"nombre": "Franklin Parra", "cargo": "Supervisor"},
-        {"nombre": "Rafael Quishpe", "cargo": "Supervisor"},
-        {"nombre": "Diego Tipantuña", "cargo": "Guardia"},
-        {"nombre": "Damian Velez", "cargo": "Guardia"},
-        {"nombre": "David Velez", "cargo": "Guardia"},
-        {"nombre": "Vinicio Caizapanta", "cargo": "Guardia"},
-        {"nombre": "Humberto Cachihuango", "cargo": "Guardia"},
-        {"nombre": "Anderson Delgado", "cargo": "Guardia"},
-        {"nombre": "Carmen Unda", "cargo": "Guardia"},
-        {"nombre": "Stalin Pangay", "cargo": "Guardia"},
-        {"nombre": "Franklin Mendez", "cargo": "Guardia"},
-        {"nombre": "Lenin Cevallos", "cargo": "Guardia"},
-        {"nombre": "Erick Fernandez", "cargo": "Guardia"}
-    ]
-    return render_template("personal.html", guardias=guardias)
+    return render_template("personal.html")
 
-# Contacto con formulario
-@app.route("/contacto", methods=["GET", "POST"])
+@app.route("/contacto")
 def contacto():
-    mensaje_confirmacion = None
+    return render_template("contacto.html")
 
-    if request.method == "POST":
-        nombre = request.form["nombre"]
-        correo = request.form["correo"]
-        mensaje_confirmacion = f"Gracias {nombre}, hemos recibido tu mensaje. Te contactaremos pronto."
+# ===============================
+# INVENTARIO
+# ===============================
 
-    return render_template("contacto.html", mensaje=mensaje_confirmacion)
+@app.route("/inventario")
+def inventario_view():
+    inventario.cargar()
+    return render_template(
+        "inventario.html",
+        productos=inventario.todos(),
+        categorias=inventario.categorias_unicas()
+    )
 
+@app.route("/agregar", methods=["POST"])
+def agregar():
+    inventario.añadir(
+        request.form["nombre"],
+        int(request.form["cantidad"]),
+        float(request.form["precio"]),
+        request.form["categoria"]
+    )
+    return redirect(url_for("inventario_view"))
+
+@app.route("/eliminar/<int:id>")
+def eliminar(id):
+    inventario.eliminar(id)
+    return redirect(url_for("inventario_view"))
+
+@app.route("/editar/<int:id>")
+def editar(id):
+    inventario.cargar()
+    producto = inventario.productos.get(id)
+    if not producto:
+        return "Producto no encontrado", 404
+    return render_template("editar.html", producto=producto)
+
+@app.route("/actualizar/<int:id>", methods=["POST"])
+def actualizar(id):
+    inventario.actualizar(
+        id,
+        int(request.form["cantidad"]),
+        float(request.form["precio"])
+    )
+    return redirect(url_for("inventario_view"))
+
+@app.route("/buscar", methods=["POST"])
+def buscar():
+    inventario.cargar()
+    resultados = inventario.buscar(request.form["nombre"])
+    return render_template(
+        "inventario.html",
+        productos=resultados,
+        categorias=inventario.categorias_unicas()
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

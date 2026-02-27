@@ -1,27 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h2>Nuestro Personal</h2>
 
-<h2>Bienvenido a Pacific Security Force</h2>
-
-<p>
-Pacific Security Force es una empresa especializada en servicios de seguridad privada,
-protección integral y control de riesgos. Nuestro compromiso es garantizar la tranquilidad
-de nuestros clientes mediante personal altamente capacitado.
-</p>
-
-<h3>¿Por qué elegirnos?</h3>
 <ul>
-    <li>Experiencia y profesionalismo</li>
-    <li>Personal certificado y capacitado</li>
-    <li>Supervisión permanente</li>
-    <li>Respuesta inmediata ante emergencias</li>
+    {% for g in guardias %}
+        <li>{{ g.nombre }} - {{ g.cargo }}</li>
+    {% endfor %}
 </ul>
-
-<h3>Compromiso</h3>
-<p>
-Trabajamos con responsabilidad, disciplina y ética profesional,
-brindando soluciones de seguridad adaptadas a cada cliente.
-</p>
 
 {% endblock %}

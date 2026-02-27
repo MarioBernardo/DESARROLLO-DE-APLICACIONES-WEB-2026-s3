@@ -1,24 +1,25 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<h2>Contáctanos</h2>
+<h2>Contacto</h2>
 
-<form method="POST">
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" required><br><br>
+<form>
+    <div class="mb-3">
+        <label>Nombre</label>
+        <input class="form-control">
+    </div>
 
-    <label>Correo:</label><br>
-    <input type="email" name="correo" required><br><br>
+    <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control">
+    </div>
 
-    <label>Mensaje:</label><br>
-    <textarea name="mensaje" rows="4" required></textarea><br><br>
+    <div class="mb-3">
+        <label>Mensaje</label>
+        <textarea class="form-control"></textarea>
+    </div>
 
-    <button type="submit">Enviar</button>
+    <button class="btn btn-primary">Enviar</button>
 </form>
-
-{% if mensaje %}
-    <p style="color: green;"><strong>{{ mensaje }}</strong></p>
-{% endif %}
 
 {% endblock %}
