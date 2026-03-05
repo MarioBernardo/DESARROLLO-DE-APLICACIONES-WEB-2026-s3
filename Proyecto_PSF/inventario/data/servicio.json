@@ -1,0 +1,14 @@
+[
+ {
+  "nombre": "Linterna",
+  "cantidad": 10,
+  "precio": 15,
+  "categoria": "Equipos"
+ },
+ {
+  "nombre": "Radio",
+  "cantidad": 5,
+  "precio": 80,
+  "categoria": "Comunicacion"
+ }
+]

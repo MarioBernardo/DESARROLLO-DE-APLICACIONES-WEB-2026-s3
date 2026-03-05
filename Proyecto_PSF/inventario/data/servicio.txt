@@ -1,0 +1,3 @@
+Linterna,10,15,Equipos
+Radio,5,80,Comunicacion
+Uniforme,20,35,Uniformes

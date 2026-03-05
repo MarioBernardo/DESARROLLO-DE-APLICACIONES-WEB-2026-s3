@@ -1,16 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
+<h1>Editar servicio</h1>
 
-<h2>Editar Producto</h2>
+<form method="POST">
 
-<form method="POST" action="/actualizar/{{ producto.get_id() }}">
-<label>Cantidad</label>
-<input class="form-control" name="cantidad" value="{{ producto.get_cantidad() }}" required>
+<input type="text" name="nombre" value="{{ servicio.nombre }}">
 
-<label>Precio</label>
-<input class="form-control" name="precio" value="{{ producto.get_precio() }}" required>
+<input type="text" name="descripcion" value="{{ servicio.descripcion }}">
 
-<button class="btn btn-primary mt-2">Actualizar</button>
+<button type="submit">Guardar</button>
+
 </form>
 
-{% endblock %}
+<a href="/servicios">Volver</a>

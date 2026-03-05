@@ -1,12 +1,7 @@
-{% extends "base.html" %}
-{% block content %}
+<h1>Detalle del servicio</h1>
 
-<h2>Detalle del Servicio</h2>
+<h2>{{ servicio.nombre }}</h2>
 
-<p>{{ descripcion }}</p>
+<p>{{ servicio.descripcion }}</p>
 
-<a href="{{ url_for('servicios') }}" class="btn btn-secondary">
-    Volver a Servicios
-</a>
-
-{% endblock %}
+<a href="/servicios">Volver</a>

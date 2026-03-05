@@ -1,13 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
-from models import *
+from models import db, Servicio
+from inventario.persistencia import leer_txt, leer_json, leer_csv
 
 app = Flask(__name__)
 
-crear_tablas()
-precargar()
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-inventario = Inventario()
-inventario.cargar()
+db.init_app(app)
+
+# Crear base de datos
+with app.app_context():
+    db.create_all()
 
 # ===============================
 # PAGINAS PRINCIPALES
@@ -17,34 +21,89 @@ inventario.cargar()
 def index():
     return render_template("index.html")
 
+
 @app.route("/about")
 def about():
     return render_template("about.html")
 
+
+# ===============================
+# SERVICIOS (CRUD CON SQLALCHEMY)
+# ===============================
+
 @app.route("/servicios")
 def servicios():
-    servicios_lista = [
-        {"id": 1, "nombre": "Seguridad Física"},
-        {"id": 2, "nombre": "Monitoreo CCTV"},
-        {"id": 3, "nombre": "Consultoría en Seguridad"}
-    ]
-    return render_template("servicios.html", servicios=servicios_lista)
+
+    servicios = Servicio.query.all()
+
+    return render_template(
+        "servicios.html",
+        servicios=servicios
+    )
+
 
 @app.route("/servicio/<int:id>")
 def detalle_servicio(id):
-    descripciones = {
-        1: "Protección empresarial y residencial.",
-        2: "Monitoreo 24/7 con tecnología avanzada.",
-        3: "Análisis y planificación estratégica."
-    }
 
-    servicio = descripciones.get(id)
+    servicio = Servicio.query.get_or_404(id)
 
-    if not servicio:
-        return "Servicio no encontrado", 404
+    return render_template(
+        "detalle_servicio.html",
+        servicio=servicio
+    )
 
-    return render_template("detalle_servicio.html",
-                           descripcion=servicio)
+
+@app.route("/agregar", methods=["POST"])
+def agregar():
+
+    nombre = request.form["nombre"]
+    descripcion = request.form["descripcion"]
+
+    nuevo = Servicio(
+        nombre=nombre,
+        descripcion=descripcion
+    )
+
+    db.session.add(nuevo)
+    db.session.commit()
+
+    return redirect(url_for("servicios"))
+
+
+@app.route("/editar/<int:id>", methods=["GET", "POST"])
+def editar(id):
+
+    servicio = Servicio.query.get_or_404(id)
+
+    if request.method == "POST":
+
+        servicio.nombre = request.form["nombre"]
+        servicio.descripcion = request.form["descripcion"]
+
+        db.session.commit()
+
+        return redirect(url_for("servicios"))
+
+    return render_template(
+        "editar.html",
+        servicio=servicio
+    )
+
+
+@app.route("/eliminar/<int:id>")
+def eliminar(id):
+
+    servicio = Servicio.query.get_or_404(id)
+
+    db.session.delete(servicio)
+    db.session.commit()
+
+    return redirect(url_for("servicios"))
+
+
+# ===============================
+# CLIENTES
+# ===============================
 
 @app.route("/clientes")
 def clientes():
@@ -63,70 +122,50 @@ def clientes():
         "Piazzara"
     ]
 
-    return render_template("clientes.html", clientes=lista_clientes)
+    return render_template(
+        "clientes.html",
+        clientes=lista_clientes
+    )
+
+
+# ===============================
+# PERSONAL
+# ===============================
 
 @app.route("/personal")
 def personal():
     return render_template("personal.html")
 
+
+# ===============================
+# CONTACTO
+# ===============================
+
 @app.route("/contacto")
 def contacto():
     return render_template("contacto.html")
 
+
 # ===============================
-# INVENTARIO
+# INVENTARIO (TXT JSON CSV)
 # ===============================
 
 @app.route("/inventario")
-def inventario_view():
-    inventario.cargar()
+def inventario():
+
+    txt = leer_txt()
+    json_data = leer_json()
+    csv_data = leer_csv()
+
     return render_template(
         "inventario.html",
-        productos=inventario.todos(),
-        categorias=inventario.categorias_unicas()
+        txt=txt,
+        json=json_data,
+        csv=csv_data
     )
 
-@app.route("/agregar", methods=["POST"])
-def agregar():
-    inventario.añadir(
-        request.form["nombre"],
-        int(request.form["cantidad"]),
-        float(request.form["precio"]),
-        request.form["categoria"]
-    )
-    return redirect(url_for("inventario_view"))
 
-@app.route("/eliminar/<int:id>")
-def eliminar(id):
-    inventario.eliminar(id)
-    return redirect(url_for("inventario_view"))
-
-@app.route("/editar/<int:id>")
-def editar(id):
-    inventario.cargar()
-    producto = inventario.productos.get(id)
-    if not producto:
-        return "Producto no encontrado", 404
-    return render_template("editar.html", producto=producto)
-
-@app.route("/actualizar/<int:id>", methods=["POST"])
-def actualizar(id):
-    inventario.actualizar(
-        id,
-        int(request.form["cantidad"]),
-        float(request.form["precio"])
-    )
-    return redirect(url_for("inventario_view"))
-
-@app.route("/buscar", methods=["POST"])
-def buscar():
-    inventario.cargar()
-    resultados = inventario.buscar(request.form["nombre"])
-    return render_template(
-        "inventario.html",
-        productos=resultados,
-        categorias=inventario.categorias_unicas()
-    )
+# ===============================
 
 if __name__ == "__main__":
     app.run(debug=True)

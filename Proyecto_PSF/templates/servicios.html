@@ -1,16 +1,52 @@
-{% extends "base.html" %}
-{% block content %}
+<h1>Servicios</h1>
 
-<h2>Nuestros Servicios</h2>
+<form action="/agregar" method="POST">
 
-<ul>
-    {% for s in servicios %}
-        <li>
-            <a href="{{ url_for('detalle_servicio', id=s.id) }}">
-                {{ s.nombre }}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
+<input type="text" name="nombre" placeholder="Nombre del servicio" required>
 
-{% endblock %}
+<input type="text" name="descripcion" placeholder="Descripción" required>
+
+<button type="submit">Agregar servicio</button>
+
+</form>
+
+<br>
+
+<table border="1">
+
+<tr>
+<th>ID</th>
+<th>Nombre</th>
+<th>Descripción</th>
+<th>Acciones</th>
+</tr>
+
+{% for s in servicios %}
+
+<tr>
+
+<td>{{ s.id }}</td>
+
+<td>{{ s.nombre }}</td>
+
+<td>{{ s.descripcion }}</td>
+
+<td>
+
+<a href="/servicio/{{ s.id }}">Ver</a>
+
+|
+
+<a href="/editar/{{ s.id }}">Editar</a>
+
+|
+
+<a href="/eliminar/{{ s.id }}">Eliminar</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
